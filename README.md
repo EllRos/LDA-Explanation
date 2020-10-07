@@ -3,4 +3,18 @@ This is a simple example package. You can use
 to write your content.
 
 ## Installation
-`pip install git+https://github.com/EllRos/LDA_Explanation.git`
+`pip install git+https://github.com/EllRos/LDA-Explanation.git`
+
+**TODO**: Add wheel installation option (w/o git)
+
+### Requirements
+Installation requiers (and includes) the installation of the following libraries (of any version):
+* NumPy
+* Pandas
+* Matplotlib
+* Gensim
+
+## Documentation
+API documentation: https://ellros.github.io/LDA-Explanation/
+
+Functionality demonstration: https://ellros.github.io/LDA-Explanation/demo.html
