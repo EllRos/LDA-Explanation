@@ -7,20 +7,15 @@ from matplotlib.colors import TABLEAU_COLORS
 import os
 
 
-class LDA_explainer:
+class LDA_Explainer:
     """An LDA wrapper for explaining a predictor's predictions.
     Currently supports only binary predictors.
-    Supports domain-ruled data.
+    Optionally supports domain-ruled data.
 
     Parameters
     ----------
     num_topics : int
         Number of topics of the LDA model.
-    model : object, optional
-        The (pre-fit) explained model.
-        Must have a method `predict_proba(input)` that takes (possibly tokenized) texts
-        and returns the confidence of the model for classifying the texts as positive.
-        If ommited, confidence scores must be supplied to `fit()`.
     
     Attributes
     ----------
@@ -29,8 +24,6 @@ class LDA_explainer:
     lda : gensim.models.LdaModel
         The underlying LDA model.
         `None` before `fit()` is called.
-    model : object
-        The explained model passed at initialization (or `None` if was not passed).
     domain_names : list of str
         The domain names that were either given to `fit()` or defaulted to numbering.
         `None` before `fit()` is called in any case.
@@ -38,8 +31,7 @@ class LDA_explainer:
         The domain names that were either given to `fit()` (or None if not given).
         `None` before `fit()` is called.
     model_confidence : list of float
-        Model confidence that was either passed to `fit()` or was calculated in it
-        using the model given at initialization.
+        Model confidence that was passed to `fit()`.
         `None` before `fit()` is called.
     doc_topic_mx : 2-D numpy.ndarray of type float
         A `(num_documents, num_topics)` matrix that describe each document given to `fit()`
@@ -54,7 +46,7 @@ class LDA_explainer:
     """
 
 
-    def __init__(self, num_topics, model = None):
+    def __init__(self, num_topics):
         # Input check
         try:
             assert float(num_topics) == int(num_topics) and num_topics > 0
@@ -65,13 +57,11 @@ class LDA_explainer:
             raise ValueError('Argument "model" must have a callable attribute "predict_proba".')
 
         self.num_topics = num_topics
-        self.model = model
         self.lda = self.domain_names = self.domain_labels = self.model_confidence = self.doc_topic_mx = self.sep_topics = None
 
 
     def save(self, fname):
         """Saves the model to files with the prefix `fname`.
-        Cannot save if `model` is given at initialization.
         
         Parameters
         ----------
@@ -79,10 +69,13 @@ class LDA_explainer:
             Optional directory + file names prefix.
             For example, if `fname = "./saved_models/explainer"`, multiple files in "./saved_models"
             will be written with the prefix "explainer".
+
+        Raises
+        ------
+        RuntimeError
+            If `fit()` was not called for the model earlier.
         """
 
-        if self.model is not None:
-            raise RuntimeError('Saving is forbidden if explained model is given at initialization.')
         if self.lda is None:
             raise RuntimeError('Tried saving model without fitting (nothing to save).')
         
@@ -105,7 +98,6 @@ class LDA_explainer:
     @classmethod
     def load(cls, fname):
         """Loads a saved model from files with the prefix `fname`.
-        Saved models cannot contain an explained model.
         
         Parameters
         ----------
@@ -140,25 +132,18 @@ class LDA_explainer:
         return obj
 
 
-    def fit(self, texts, model_inputs = None, model_confidence = None, domain_labels = None, domain_names = None):
-        r"""Fits the explaining LDA model and evaluate topics (for each domain).
-        Can receive model confidence, rather than the model and the data(required if
-        no model was given at initialization).
+    def fit(self, texts, model_confidence, domain_labels = None, domain_names = None):
+        r"""Fits the explaining LDA model and evaluate topics (possibly for each domain).
+
         
         Parameters
         ----------
         texts : list of str
             List (or array-like) of the classified texts (as strings).
             This is used as input to the LDA model and maybe to the explained model as well.
-        model_inputs : list, optional
-            If `model` was given at initialization, used as input for the model.
-            If not given, `texts` is used.
-            Ignored if `model_confidence` is given.
         model_confidence : list of float
             List (or array-like) containing the confidence of the explained model that
             the text is classified positively (1), for each text.
-            Optional if `model` was given at initialization, required otherwise.
-            If both this and `model` are given, this is used.
         domain_labels : list of int, optional
             List of the domain label for each entry.
             Should contain values in {0, 1, ..., num_domains}.
@@ -203,7 +188,7 @@ class LDA_explainer:
                 assert isinstance(text, str)
         except (AssertionError, TypeError):
             raise ValueError('Argument "texts" should be an array-like of strings')
-        if model_confidence is not None:
+        if model_confidence is not None:  # True after changes.
             try:
                 assert not isinstance(model_confidence, str)
                 model_confidence = np.array(model_confidence, dtype = np.float)
@@ -226,16 +211,6 @@ class LDA_explainer:
 
         self.domain_names = np.array(domain_names, dtype = str)
         self.domain_labels = domain_labels
-
-        # Get confidence (if not given)
-        if model_confidence is None:
-            if self.model is None:
-                raise ValueError('Since "model" was not given at initialization, "model_confidence" is required.')
-            if model_inputs is None:
-                model_inputs = texts
-            model_confidence = np.array(self.model.predict_proba(model_inputs))
-            if model_confidence.size() != len(texts):
-                raise RuntimeError(f'Given model yields {model_inputs.size()} confidence scores instead of {len(texts)}.')
         self.model_confidence = model_confidence
 
         # Preprocess

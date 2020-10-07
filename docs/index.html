@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; LDA Explanation 0.0.1 documentation</title>
+    <title>LDA Explanation &#8212; LDA Explanation 0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -27,7 +27,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">LDA Explanation 0.0.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+        <li class="nav-item nav-item-this"><a href="">LDA Explanation</a></li> 
       </ul>
     </div>  
 
@@ -35,21 +35,18 @@
       <div class="documentwrapper">
           <div class="body" role="main">
             
-  <span class="target" id="module-lda_explainer"></span><dl class="py class">
+  <div class="section" id="lda-explanation">
+<h1>LDA Explanation<a class="headerlink" href="#lda-explanation" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-lda_explainer"></span><dl class="py class">
 <dt id="lda_explainer.LDA_Explainer">
-<em class="property">class </em><code class="sig-prename descclassname">lda_explainer.</code><code class="sig-name descname">LDA_Explainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_topics</span></em>, <em class="sig-param"><span class="n">model</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">lda_explainer.</code><code class="sig-name descname">LDA_Explainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_topics</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>An LDA wrapper for explaining a predictor’s predictions.
 Currently supports only binary predictors.
-Supports domain-ruled data.</p>
+Optionally supports domain-ruled data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>num_topics</strong><span class="classifier">int</span></dt><dd><p>Number of topics of the LDA model.</p>
-</dd>
-<dt><strong>model</strong><span class="classifier">object, optional</span></dt><dd><p>The (pre-fit) explained model.
-Must have a method <cite>predict_proba(input)</cite> that takes (possibly tokenized) texts
-and returns the confidence of the model for classifying the texts as positive.
-If ommited, confidence scores must be supplied to <cite>fit()</cite>.</p>
 </dd>
 </dl>
 </dd>
@@ -60,16 +57,13 @@ If ommited, confidence scores must be supplied to <cite>fit()</cite>.</p>
 <dt><strong>lda</strong><span class="classifier">gensim.models.LdaModel</span></dt><dd><p>The underlying LDA model.
 <cite>None</cite> before <cite>fit()</cite> is called.</p>
 </dd>
-<dt><strong>model</strong><span class="classifier">object</span></dt><dd><p>The explained model passed at initialization (or <cite>None</cite> if was not passed).</p>
-</dd>
 <dt><strong>domain_names</strong><span class="classifier">list of str</span></dt><dd><p>The domain names that were either given to <cite>fit()</cite> or defaulted to numbering.
 <cite>None</cite> before <cite>fit()</cite> is called in any case.</p>
 </dd>
-<dt><strong>domain_labels</strong><span class="classifier">list of int</span></dt><dd><p>The domain names that were either given to <cite>fit()</cite> (or None if not given).
+<dt><strong>domain_labels</strong><span class="classifier">list of int</span></dt><dd><p>The domain names that were either given to <cite>fit()</cite> (or <cite>None</cite> if not given).
 <cite>None</cite> before <cite>fit()</cite> is called.</p>
 </dd>
-<dt><strong>model_confidence</strong><span class="classifier">list of float</span></dt><dd><p>Model confidence that was either passed to <cite>fit()</cite> or was calculated in it
-using the model given at initialization.
+<dt><strong>model_confidence</strong><span class="classifier">list of float</span></dt><dd><p>Model confidence that was passed to <cite>fit()</cite>.
 <cite>None</cite> before <cite>fit()</cite> is called.</p>
 </dd>
 <dt><strong>doc_topic_mx</strong><span class="classifier">2-D numpy.ndarray of type float</span></dt><dd><p>A <cite>(num_documents, num_topics)</cite> matrix that describe each document given to <cite>fit()</cite>
@@ -98,8 +92,8 @@ Always contains the “All” domain.
 <tr class="row-even"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.display_topics" title="lda_explainer.LDA_Explainer.display_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_topics</span></code></a>([topn, colors])</p></td>
 <td><p>Presents all topics in a pandas DataFrame.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.fit" title="lda_explainer.LDA_Explainer.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(texts[, model_inputs, model_confidence, …])</p></td>
-<td><p>Fits the explaining LDA model and evaluate topics (for each domain).</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.fit" title="lda_explainer.LDA_Explainer.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(texts, model_confidence[, …])</p></td>
+<td><p>Fits the explaining LDA model and evaluate topics (possibly for each domain).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.load" title="lda_explainer.LDA_Explainer.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(fname)</p></td>
 <td><p>Loads a saved model from files with the prefix <cite>fname</cite>.</p></td>
@@ -170,24 +164,16 @@ The table is captioned <cite>f”Top {topn} Words”</cite>.</p>
 
 <dl class="py method">
 <dt id="lda_explainer.LDA_Explainer.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">texts</span></em>, <em class="sig-param"><span class="n">model_inputs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">model_confidence</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">domain_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">domain_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fits the explaining LDA model and evaluate topics (for each domain).
-Can receive model confidence, rather than the model and the data(required if
-no model was given at initialization).</p>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">texts</span></em>, <em class="sig-param"><span class="n">model_confidence</span></em>, <em class="sig-param"><span class="n">domain_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">domain_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the explaining LDA model and evaluate topics (possibly for each domain).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>texts</strong><span class="classifier">list of str</span></dt><dd><p>List (or array-like) of the classified texts (as strings).
 This is used as input to the LDA model and maybe to the explained model as well.</p>
 </dd>
-<dt><strong>model_inputs</strong><span class="classifier">list, optional</span></dt><dd><p>If <cite>model</cite> was given at initialization, used as input for the model.
-If not given, <cite>texts</cite> is used.
-Ignored if <cite>model_confidence</cite> is given.</p>
-</dd>
 <dt><strong>model_confidence</strong><span class="classifier">list of float</span></dt><dd><p>List (or array-like) containing the confidence of the explained model that
-the text is classified positively (1), for each text.
-Optional if <cite>model</cite> was given at initialization, required otherwise.
-If both this and <cite>model</cite> are given, this is used.</p>
+the text is classified positively (1), for each text.</p>
 </dd>
 <dt><strong>domain_labels</strong><span class="classifier">list of int, optional</span></dt><dd><p>List of the domain label for each entry.
 Should contain values in {0, 1, …, num_domains}.</p>
@@ -222,15 +208,15 @@ the LDA model, but input for <cite>model</cite> (if given) is passed as-is.</p>
 \[z^{sep} = \arg\max_{z \in Z} \left| \sum_{i \in I_{test}} \hat{y}_i \theta_z^i \right|\]</div>
 <p>Where <span class="math notranslate nohighlight">\(\hat{y}_i\)</span> is the prediction of the explained model for the <span class="math notranslate nohighlight">\(i^{th}\)</span> document
 (1 for positive class and -1 for negative class) and <span class="math notranslate nohighlight">\(\theta_z^i\)</span> is the probability of
-topic <span class="math notranslate nohighlight">\(z\)</span> in document <span class="math notranslate nohighlight">\(i\)</span>.
-Note that the sign of the score (without the absolute value) is saved.</p>
+topic <span class="math notranslate nohighlight">\(z\)</span> in document <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>Note that the sign of the score (without absolute value) is saved.</p>
+<p>This definition induces symmetry between positive and negative classes.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="lda_explainer.LDA_Explainer.load">
 <em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads a saved model from files with the prefix <cite>fname</cite>.
-Saved models cannot contain an explained model.</p>
+<dd><p>Loads a saved model from files with the prefix <cite>fname</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -324,8 +310,7 @@ Domain names will replace “%s”.</p>
 <dl class="py method">
 <dt id="lda_explainer.LDA_Explainer.save">
 <code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves the model to files with the prefix <cite>fname</cite>.
-Cannot save if <cite>model</cite> is given at initialization.</p>
+<dd><p>Saves the model to files with the prefix <cite>fname</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -335,11 +320,18 @@ will be written with the prefix “explainer”.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><dl class="simple">
+<dt>RuntimeError</dt><dd><p>If <cite>fit()</cite> was not called for the model earlier.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
+</div>
 
 
             <div class="clearer"></div>
@@ -357,7 +349,7 @@ will be written with the prefix “explainer”.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">LDA Explanation 0.0.1 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
+        <li class="nav-item nav-item-this"><a href="">LDA Explanation</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
