@@ -15,4 +15,5 @@ Installation requiers (and includes) the installation of the following libraries
 * Gensim
 
 ## Documentation
-https://ellros.github.io/LDA_Explanation/
+API documentation: https://ellros.github.io/LDA_Explanation/
+Functionality demonstration: https://ellros.github.io/LDA_Explanation/Demo.html
