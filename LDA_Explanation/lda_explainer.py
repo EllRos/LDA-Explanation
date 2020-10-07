@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import TABLEAU_COLORS
 import os
 
+# This is a change!
 
 class LDA_Explainer:
     """An LDA wrapper for explaining a predictor's predictions.
@@ -28,7 +29,7 @@ class LDA_Explainer:
         The domain names that were either given to `fit()` or defaulted to numbering.
         `None` before `fit()` is called in any case.
     domain_labels : list of int
-        The domain names that were either given to `fit()` (or None if not given).
+        The domain names that were either given to `fit()` (or `None` if not given).
         `None` before `fit()` is called.
     model_confidence : list of float
         Model confidence that was passed to `fit()`.
@@ -178,7 +179,10 @@ class LDA_Explainer:
         Where :math:`\hat{y}_i` is the prediction of the explained model for the :math:`i^{th}` document
         (1 for positive class and -1 for negative class) and :math:`\theta_z^i` is the probability of
         topic :math:`z` in document :math:`i`.
-        Note that the sign of the score (without the absolute value) is saved.
+        
+        Note that the sign of the score (without absolute value) is saved.
+        
+        This definition induces symmetry between positive and negative classes.
         """
 
         # Input Check
