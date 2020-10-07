@@ -7,7 +7,6 @@ from matplotlib.colors import TABLEAU_COLORS
 import os
 
 # This is a change!
-
 class LDA_Explainer:
     """An LDA wrapper for explaining a predictor's predictions.
     Currently supports only binary predictors.
