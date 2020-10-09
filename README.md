@@ -3,12 +3,12 @@ This is a simple example package. You can use
 to write your content.
 
 ## **TODO**
-* Add wheel installation option (w/o git)
-* Add support for PyTorch (remove support for sklearn)
+* ~~Add support for PyTorch (remove support for sklearn)~~
 * Stress in the docs that domains are optional
 * Write a description in README.md
 * Test the code
 * Update the demo notebook
+* Add wheel installation option (w/o git)
 
 ## Installation
 `pip install git+https://github.com/EllRos/LDA-Explanation.git`
