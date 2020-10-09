@@ -2,10 +2,16 @@ This is a simple example package. You can use
 [Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
 to write your content.
 
+## **TODO**
+* Add wheel installation option (w/o git)
+* Add support for PyTorch (remove support for sklearn)
+* Stress in the docs that domains are optional
+* Write a description in README.md
+* Test the code
+* Update the demo notebook
+
 ## Installation
 `pip install git+https://github.com/EllRos/LDA-Explanation.git`
-
-**TODO**: Add wheel installation option (w/o git)
 
 ### Requirements
 Installation requiers (and includes) the installation of the following libraries (of any version):
