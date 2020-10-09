@@ -42,7 +42,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">lda_explainer.</code><code class="sig-name descname">LDA_Explainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_topics</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>An LDA wrapper for explaining a predictor’s predictions.
 Currently supports only binary predictors.
-Optionally supports domain-ruled data.</p>
+Optionally supports domain-ruled data (see methods API and demo).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -73,7 +73,7 @@ as a mixture of topics.
 <dt><strong>sep_topics</strong><span class="classifier">list of tuple triplets</span></dt><dd><p>Seperating topics chosen for each domain and their scores.
 See documentation of <cite>fit()</cite> for further explanation.
 A list of <cite>(domain_name, seperating_topic_number, topic_score)</cite> triplets.
-Always contains the “All” domain.
+Always contains the “All” domain (even when no domains are given).
 <cite>None</cite> before <cite>fit()</cite> is called.</p>
 </dd>
 </dl>
@@ -165,7 +165,9 @@ The table is captioned <cite>f”Top {topn} Words”</cite>.</p>
 <dl class="py method">
 <dt id="lda_explainer.LDA_Explainer.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">texts</span></em>, <em class="sig-param"><span class="n">model_confidence</span></em>, <em class="sig-param"><span class="n">domain_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">domain_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fits the explaining LDA model and evaluate topics (possibly for each domain).</p>
+<dd><p>Fits the explaining LDA model and evaluate topics (possibly for each domain).
+The support for domains is completely optional and seems integral since the class
+was designed for a domain-ruled data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -175,13 +177,14 @@ This is used as input to the LDA model and maybe to the explained model as well.
 <dt><strong>model_confidence</strong><span class="classifier">list of float</span></dt><dd><p>List (or array-like) containing the confidence of the explained model that
 the text is classified positively (1), for each text.</p>
 </dd>
-<dt><strong>domain_labels</strong><span class="classifier">list of int, optional</span></dt><dd><p>List of the domain label for each entry.
-Should contain values in {0, 1, …, num_domains}.</p>
+<dt><strong>domain_labels</strong><span class="classifier">list of int, optional</span></dt><dd><p>Optional list of the domain label for each entry.
+If given, should contain values in {0, 1, …, num_domains}.</p>
 </dd>
-<dt><strong>domain_names</strong><span class="classifier">list of str, optional</span></dt><dd><p>List of the domain names, ignored if <cite>domain_labels</cite> is not given.
+<dt><strong>domain_names</strong><span class="classifier">list of str, optional</span></dt><dd><p>Optional list of the domain names, ignored if <cite>domain_labels</cite> is not given.
 Should be of length <cite>numpy.max(domain_labels) + 1</cite>.
 The name in index <cite>i</cite> corresponds to the domain <cite>i</cite> in <cite>domain_labels</cite>.
-If <cite>domain_labels</cite> is given and <cite>domain_names</cite> is not, simple numbering is used.</p>
+If <cite>domain_labels</cite> is given and <cite>domain_names</cite> is not, simple numbering is used.
+Cannot contain <cite>“All”</cite>, as it is saved for all the domains.</p>
 </dd>
 </dl>
 </dd>
@@ -195,7 +198,7 @@ If <cite>domain_labels</cite> is given and <cite>domain_names</cite> is not, sim
 <dd class="field-odd"><dl class="simple">
 <dt>ValueError</dt><dd><p>If any of the parameters given is not as specified.</p>
 </dd>
-<dt>RuntimeError</dt><dd><p>If tried to use <cite>model.predict_proba()</cite> to get confidence scores, but received inappropriate size.</p>
+<dt>RuntimeError</dt><dd><p>If model is already fit (e.g., if <cite>fit()</cite> is called twice or if a loaded model is fit).</p>
 </dd>
 </dl>
 </dd>
@@ -211,6 +214,8 @@ the LDA model, but input for <cite>model</cite> (if given) is passed as-is.</p>
 topic <span class="math notranslate nohighlight">\(z\)</span> in document <span class="math notranslate nohighlight">\(i\)</span>.</p>
 <p>Note that the sign of the score (without absolute value) is saved.</p>
 <p>This definition induces symmetry between positive and negative classes.</p>
+<p>While model confidence are required, currently only the predictions are used in practice.
+Model confidence can therefore be replaced with predictions (0 or 1).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -228,6 +233,12 @@ See <cite>save()</cite> for example.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt>LDA_explainer</dt><dd><p>The loaded model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>FileNotFoundError</dt><dd><p>If one or more of the files is not found.</p>
 </dd>
 </dl>
 </dd>
@@ -315,7 +326,7 @@ Domain names will replace “%s”.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>fname</strong><span class="classifier">str</span></dt><dd><p>Optional directory + file names prefix.
-For example, if <cite>fname = “./saved_models/explainer”</cite>, multiple files in “./saved_models”
+For example, if <cite>fname = “./saved_models/explainer”</cite>, multiple files in “./saved_models/”
 will be written with the prefix “explainer”.</p>
 </dd>
 </dl>
@@ -327,6 +338,8 @@ will be written with the prefix “explainer”.</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>9 files are saved.</p>
 </dd></dl>
 
 </dd></dl>
