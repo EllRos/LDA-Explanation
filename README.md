@@ -1,13 +1,16 @@
-This is a simple example package. You can use
-[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
-to write your content.
+An LDA wrapper for explaining a black-box classifier's predictions (reference to the black-box NLP workshop here?).
+
+Currently supports only binary predictors.
+
+The module was developed for domain-ruled data (see demo below), although data without domains is supported as well (see API below).
+
 
 ## **TODO**
 * ~~Add support for PyTorch (remove support for sklearn)~~
-* Stress in the docs that domains are optional
-* Write a description in README.md
-* Test the code
-* Update the demo notebook
+* ~~Stress in the docs that domains are optional~~
+* ~~Write a description in README.md~~
+* ~~Test the code~~
+* ~~Update the demo notebook~~
 * Add wheel installation option (w/o git)
 
 ## Installation
@@ -19,6 +22,7 @@ Installation requiers (and includes) the installation of the following libraries
 * Pandas
 * Matplotlib
 * Gensim
+Also requires Python version of 3.6 and above.
 
 ## Documentation
 API documentation: https://ellros.github.io/LDA-Explanation/
