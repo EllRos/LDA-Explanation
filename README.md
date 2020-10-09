@@ -10,7 +10,7 @@ The module was developed for domain-ruled data (see demo below), although data w
 ## Installation
 #### Git
 Get the latest version using git (recommended):
-```pip install git+https://github.com/EllRos/LDA-Explanation.git```
+`pip install git+https://github.com/EllRos/LDA-Explanation.git`
 
 #### Wheel
 In order to avoid git, get the latest wheel build (might not be updated, but should be):
