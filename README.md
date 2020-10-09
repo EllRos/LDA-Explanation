@@ -1,3 +1,5 @@
+# LDA Explanation
+
 An LDA wrapper for explaining a black-box classifier's predictions (reference to the black-box NLP workshop here?).
 
 Currently supports only binary predictors.
