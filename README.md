@@ -24,6 +24,7 @@ Installation requiers (and includes) the installation of the following libraries
 * Pandas
 * Matplotlib
 * Gensim
+
 Also requires Python version of 3.6 and above.
 
 ## Documentation
