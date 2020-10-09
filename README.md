@@ -23,4 +23,4 @@ Installation requiers (and includes) the installation of the following libraries
 ## Documentation
 API documentation: https://ellros.github.io/LDA-Explanation/
 
-Functionality demonstration: https://ellros.github.io/LDA-Explanation/demo.html
+Functionality demonstration: https://ellros.github.io/LDA-Explanation/demo/demo.html
