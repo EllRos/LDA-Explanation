@@ -199,6 +199,9 @@ class LDA_Explainer:
         Note that the sign of the score (without absolute value) is saved.
         
         This definition induces symmetry between positive and negative classes.
+        
+        While model confidence are required, currently only the predictions are used in practice.
+        Model confidence can therefore be replaced with predictions (0 or 1).
         """
         if self.lda is not None:
             raise RuntimeError('Model is already fit. Please create a new object.')
