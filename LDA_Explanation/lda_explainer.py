@@ -10,7 +10,7 @@ import os
 class LDA_Explainer:
     """An LDA wrapper for explaining a predictor's predictions.
     Currently supports only binary predictors.
-    Optionally supports domain-ruled data.
+    Optionally supports domain-ruled data (see methods API and demo).
 
     Parameters
     ----------
@@ -41,7 +41,7 @@ class LDA_Explainer:
         Seperating topics chosen for each domain and their scores.
         See documentation of `fit()` for further explanation.
         A list of `(domain_name, seperating_topic_number, topic_score)` triplets.
-        Always contains the "All" domain.
+        Always contains the "All" domain (even when no domains are given).
         `None` before `fit()` is called.
     """
 
@@ -53,8 +53,6 @@ class LDA_Explainer:
             num_topics = int(num_topics)
         except (AssertionError, TypeError):
             raise ValueError('Argument "num_topics" should be a positive integer.')
-        if model is not None and (getattr(model, 'predict_proba', None) is None or not callable(model.predict_proba)):
-            raise ValueError('Argument "model" must have a callable attribute "predict_proba".')
 
         self.num_topics = num_topics
         self.lda = self.domain_names = self.domain_labels = self.model_confidence = self.doc_topic_mx = self.sep_topics = None
@@ -67,13 +65,17 @@ class LDA_Explainer:
         ----------
         fname : str
             Optional directory + file names prefix.
-            For example, if `fname = "./saved_models/explainer"`, multiple files in "./saved_models"
+            For example, if `fname = "./saved_models/explainer"`, multiple files in "./saved_models/"
             will be written with the prefix "explainer".
 
         Raises
         ------
         RuntimeError
             If `fit()` was not called for the model earlier.
+
+        Notes
+        -----
+        9 files are saved.
         """
 
         if self.lda is None:
@@ -85,10 +87,15 @@ class LDA_Explainer:
 
         self.lda.save(fname + '.lda')
         self.doc_topic_mx.tofile(fname + '.doc_topic_mx')
-        self.domain_labels.tofile(fname + '.domain_labels')
         self.model_confidence.tofile(fname + '.model_confidence')
+        if self.domain_labels is None:
+            with open(fname + '.domain_labels', 'w') as f:
+                pass  # Empty file
+        else:
+            self.domain_labels.tofile(fname + '.domain_labels')
         with open(fname + '.domain_names', 'w') as f:
-            f.write('\n'.join(self.domain_names))
+            if self.domain_names is not None:  # Empty file otherwise
+                f.write('\n'.join(self.domain_names))
         with open(fname + '.sep_topics', 'w') as f:
             for triplet in self.sep_topics:
                 for item in triplet:
@@ -109,16 +116,24 @@ class LDA_Explainer:
         -------
         LDA_explainer
             The loaded model.
+        
+        Raises
+        ------
+        FileNotFoundError
+            If one or more of the files is not found.
         """
 
-        obj = cls(1)
+        obj = cls(1)  # Temporary
         obj.lda = LdaModel.load(fname + '.lda')
         obj.num_topics = obj.lda.num_topics
         obj.doc_topic_mx = np.fromfile(fname + '.doc_topic_mx').reshape(-1, obj.num_topics)
-        obj.domain_labels = np.fromfile(fname + '.domain_labels', dtype = np.int)
         obj.model_confidence = np.fromfile(fname + '.model_confidence')
-        with open(fname + '.domain_names') as f:
-            obj.domain_names = np.array(f.read().split('\n'))
+        obj.domain_labels = np.fromfile(fname + '.domain_labels', dtype = np.int)
+        if obj.domain_labels.size == 0:  # Empty file
+            obj.domain_labels = None
+        else:
+            with open(fname + '.domain_names') as f:
+                obj.domain_names = np.array(f.read().split('\n'))
         with open(fname + '.sep_topics') as f:
             obj.sep_topics = []
             while True:
@@ -134,8 +149,9 @@ class LDA_Explainer:
 
     def fit(self, texts, model_confidence, domain_labels = None, domain_names = None):
         r"""Fits the explaining LDA model and evaluate topics (possibly for each domain).
+        The support for domains is completely optional and seems integral since the class
+        was designed for a domain-ruled data.
 
-        
         Parameters
         ----------
         texts : list of str
@@ -145,13 +161,14 @@ class LDA_Explainer:
             List (or array-like) containing the confidence of the explained model that
             the text is classified positively (1), for each text.
         domain_labels : list of int, optional
-            List of the domain label for each entry.
-            Should contain values in {0, 1, ..., num_domains}.
+            Optional list of the domain label for each entry.
+            If given, should contain values in {0, 1, ..., num_domains}.
         domain_names : list of str, optional
-            List of the domain names, ignored if `domain_labels` is not given.
+            Optional list of the domain names, ignored if `domain_labels` is not given.
             Should be of length `numpy.max(domain_labels) + 1`.
             The name in index `i` corresponds to the domain `i` in `domain_labels`.
             If `domain_labels` is given and `domain_names` is not, simple numbering is used.
+            Cannot contain `"All"`, as it is saved for all the domains.
 
         Returns
         -------
@@ -164,7 +181,7 @@ class LDA_Explainer:
             If any of the parameters given is not as specified.
 
         RuntimeError
-            If tried to use `model.predict_proba()` to get confidence scores, but received inappropriate size.
+            If model is already fit (e.g., if `fit()` is called twice or if a loaded model is fit).
 
         Notes
         -----
@@ -183,6 +200,8 @@ class LDA_Explainer:
         
         This definition induces symmetry between positive and negative classes.
         """
+        if self.lda is not None:
+            raise RuntimeError('Model is already fit. Please create a new object.')
 
         # Input Check
         try:
@@ -211,9 +230,11 @@ class LDA_Explainer:
                 domain_names = np.arange(1, domains.max() + 2)
             if isinstance(domain_names, str) or len(domain_names) != domains.max() + 1:
                 raise ValueError(f'Argument "domain_names" should be either None or an array-like with size {np.unique(domain_labels).size}.')
+            if 'All' in domain_names:
+                raise ValueError('Argument "domain_names" cannot contain "All".')
+            self.domain_names = np.array(domain_names, dtype = str)
+            self.domain_labels = domain_labels
 
-        self.domain_names = np.array(domain_names, dtype = str)
-        self.domain_labels = domain_labels
         self.model_confidence = model_confidence
 
         # Preprocess
@@ -236,11 +257,12 @@ class LDA_Explainer:
         topic_scores_all = self.doc_topic_mx.T @ prediction  # Signed scores
         sep_topic_all = np.abs(topic_scores_all).argmax()
         self.sep_topics = [('All', sep_topic_all, topic_scores_all[sep_topic_all])]  # (domain, topic, score) triplets
-        for domain, domain_name in enumerate(self.domain_names):
-            idxs = self.domain_labels == domain
-            topic_scores = self.doc_topic_mx[idxs].T @ prediction[idxs]
-            sep_topic = np.abs(topic_scores).argmax()
-            self.sep_topics.append((domain_name, sep_topic, topic_scores[sep_topic]))
+        if self.domain_names is not None:
+            for domain, domain_name in enumerate(self.domain_names):
+                idxs = self.domain_labels == domain
+                topic_scores = self.doc_topic_mx[idxs].T @ prediction[idxs]
+                sep_topic = np.abs(topic_scores).argmax()
+                self.sep_topics.append((domain_name, sep_topic, topic_scores[sep_topic]))
     
         return self
     
