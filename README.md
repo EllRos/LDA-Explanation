@@ -1,6 +1,6 @@
 # LDA Explanation
 
-An LDA wrapper for explaining a black-box classifier's predictions (reference to the black-box NLP workshop here?).
+An LDA wrapper for explaining a black-box classifier's predictions, as done in [Oved, N., Feder, A. and Reichart, R. (2020)](https://www.mitpressjournals.org/doi/abs/10.1162/coli_a_00383) and presented in [EMNLP 2020's blackbox workshop](https://blackboxnlp.github.io/).
 
 Currently supports only binary predictors.
 
