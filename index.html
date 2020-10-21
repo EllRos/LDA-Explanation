@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LDA Explanation &#8212; LDA Explanation 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">LDA Explanation 0.0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">LDA Explanation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="lda-explanation">
+<h1>LDA Explanation<a class="headerlink" href="#lda-explanation" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-lda_explainer"></span><dl class="py class">
+<dt id="lda_explainer.LDA_Explainer">
+<em class="property">class </em><code class="sig-prename descclassname">lda_explainer.</code><code class="sig-name descname">LDA_Explainer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num_topics</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>An LDA wrapper for explaining a predictor’s predictions.
+Currently supports only binary predictors.
+Optionally supports domain-ruled data (see methods API and demo).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>num_topics</strong><span class="classifier">int</span></dt><dd><p>Number of topics of the LDA model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>num_topics</strong><span class="classifier">int</span></dt><dd><p>Number of LDA topics that was passed at initialization.</p>
+</dd>
+<dt><strong>lda</strong><span class="classifier">gensim.models.LdaModel</span></dt><dd><p>The underlying LDA model.
+<cite>None</cite> before <cite>fit()</cite> is called.</p>
+</dd>
+<dt><strong>domain_names</strong><span class="classifier">list of str</span></dt><dd><p>The domain names that were either given to <cite>fit()</cite> or defaulted to numbering.
+<cite>None</cite> before <cite>fit()</cite> is called in any case.</p>
+</dd>
+<dt><strong>domain_labels</strong><span class="classifier">list of int</span></dt><dd><p>The domain names that were either given to <cite>fit()</cite> (or <cite>None</cite> if not given).
+<cite>None</cite> before <cite>fit()</cite> is called.</p>
+</dd>
+<dt><strong>model_confidence</strong><span class="classifier">list of float</span></dt><dd><p>Model confidence that was passed to <cite>fit()</cite>.
+<cite>None</cite> before <cite>fit()</cite> is called.</p>
+</dd>
+<dt><strong>doc_topic_mx</strong><span class="classifier">2-D numpy.ndarray of type float</span></dt><dd><p>A <cite>(num_documents, num_topics)</cite> matrix that describe each document given to <cite>fit()</cite>
+as a mixture of topics.
+<cite>None</cite> before <cite>fit()</cite> is called.</p>
+</dd>
+<dt><strong>sep_topics</strong><span class="classifier">list of tuple triplets</span></dt><dd><p>Seperating topics chosen for each domain and their scores.
+See documentation of <cite>fit()</cite> for further explanation.
+A list of <cite>(domain_name, seperating_topic_number, topic_score)</cite> triplets.
+Always contains the “All” domain (even when no domains are given).
+<cite>None</cite> before <cite>fit()</cite> is called.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.display_seperating_topics" title="lda_explainer.LDA_Explainer.display_seperating_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_seperating_topics</span></code></a>([topn])</p></td>
+<td><p>Presents the seperating topics (one topic if no domains are given) in a pandas DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.display_topics" title="lda_explainer.LDA_Explainer.display_topics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_topics</span></code></a>([topn, colors])</p></td>
+<td><p>Presents all topics in a pandas DataFrame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.fit" title="lda_explainer.LDA_Explainer.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(texts, model_confidence[, …])</p></td>
+<td><p>Fits the explaining LDA model and evaluate topics (possibly for each domain).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.load" title="lda_explainer.LDA_Explainer.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(fname)</p></td>
+<td><p>Loads a saved model from files with the prefix <cite>fname</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.plot_topic_confidence_trends" title="lda_explainer.LDA_Explainer.plot_topic_confidence_trends"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_topic_confidence_trends</span></code></a>([save_fname, …])</p></td>
+<td><p>Plots topic-confidence trend line for all documents and for each domain.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.plot_topics_dominance" title="lda_explainer.LDA_Explainer.plot_topics_dominance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_topics_dominance</span></code></a>([save_fstr])</p></td>
+<td><p>Plots the average dominance of each topic in each domain (and in all domains).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#lda_explainer.LDA_Explainer.save" title="lda_explainer.LDA_Explainer.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(fname)</p></td>
+<td><p>Saves the model to files with the prefix <cite>fname</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.display_seperating_topics">
+<code class="sig-name descname">display_seperating_topics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">topn</span><span class="o">=</span><span class="default_value">15</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.display_seperating_topics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Presents the seperating topics (one topic if no domains are given) in a pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>topn</strong><span class="classifier">int</span></dt><dd><p>Number of words to present for each topic (default = 15).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>The presentive DataFrame. Each row corresponds to a domain (including “All”).
+Each row consist of the domain name as the index, the topic number, its score
+and <cite>topn</cite> entries with the <cite>topn</cite> top words of the topic.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Topics are numbered from 1 to <cite>num_topics</cite>.</p>
+<p>See <cite>fit</cite> for explanation on the score and its sign.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.display_topics">
+<code class="sig-name descname">display_topics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">topn</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.display_topics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Presents all topics in a pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>topn</strong><span class="classifier">int</span></dt><dd><p>Number of words to present for each topic (default = 15).</p>
+</dd>
+<dt><strong>colors</strong><span class="classifier">dict of (str, list), optional</span></dt><dd><p>Instructions for coloring specific rows in specific colors.
+If <cite>n</cite> is in <cite>colors[c]</cite>, then the font in the row of topic <cite>n</cite> will be colored in <cite>c</cite>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>pandas.io.formats.style.Styler</dt><dd><p>The presentive table. Each row corresponds to a topic.
+Each row consist of the topic name (number) as the index and <cite>topn</cite>
+entries with the <cite>topn</cite> top words of the topic.
+The table is captioned <cite>f”Top {topn} Words”</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Topics are numbered from 1 to <cite>num_topics</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">texts</span></em>, <em class="sig-param"><span class="n">model_confidence</span></em>, <em class="sig-param"><span class="n">domain_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">domain_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the explaining LDA model and evaluate topics (possibly for each domain).
+The support for domains is completely optional and seems integral since the class
+was designed for a domain-ruled data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>texts</strong><span class="classifier">list of str</span></dt><dd><p>List (or array-like) of the classified texts (as strings).
+This is used as input to the LDA model and maybe to the explained model as well.</p>
+</dd>
+<dt><strong>model_confidence</strong><span class="classifier">list of float</span></dt><dd><p>List (or array-like) containing the confidence of the explained model that
+the text is classified positively (1), for each text.</p>
+</dd>
+<dt><strong>domain_labels</strong><span class="classifier">list of int, optional</span></dt><dd><p>Optional list of the domain label for each entry.
+If given, should contain values in {0, 1, …, num_domains}.</p>
+</dd>
+<dt><strong>domain_names</strong><span class="classifier">list of str, optional</span></dt><dd><p>Optional list of the domain names, ignored if <cite>domain_labels</cite> is not given.
+Should be of length <cite>numpy.max(domain_labels) + 1</cite>.
+The name in index <cite>i</cite> corresponds to the domain <cite>i</cite> in <cite>domain_labels</cite>.
+If <cite>domain_labels</cite> is given and <cite>domain_names</cite> is not, simple numbering is used.
+Cannot contain <cite>“All”</cite>, as it is saved for all the domains.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>LDA_explainer</dt><dd><p>self</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If any of the parameters given is not as specified.</p>
+</dd>
+<dt>RuntimeError</dt><dd><p>If model is already fit (e.g., if <cite>fit()</cite> is called twice or if a loaded model is fit).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Preprocesses the texts (lower casing, removing punctuations, stopwords and words of length &lt;3) before fitting
+the LDA model, but input for <cite>model</cite> (if given) is passed as-is.</p>
+<p>If <span class="math notranslate nohighlight">\(Z\)</span> is the group of all topics, the seperating topic (for each domain) is chosen by</p>
+<div class="math notranslate nohighlight">
+\[z^{sep} = \arg\max_{z \in Z} \left| \sum_{i \in I_{test}} \hat{y}_i \theta_z^i \right|\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\hat{y}_i\)</span> is the prediction of the explained model for the <span class="math notranslate nohighlight">\(i^{th}\)</span> document
+(1 for positive class and -1 for negative class) and <span class="math notranslate nohighlight">\(\theta_z^i\)</span> is the probability of
+topic <span class="math notranslate nohighlight">\(z\)</span> in document <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>Note that the sign of the score (without absolute value) is saved.</p>
+<p>This definition induces symmetry between positive and negative classes.</p>
+<p>While model confidence are required, currently only the predictions are used in practice.
+Model confidence can therefore be replaced with predictions (0 or 1).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.load">
+<em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a saved model from files with the prefix <cite>fname</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>fname</strong><span class="classifier">str</span></dt><dd><p>Optional directory + file names prefix.
+See <cite>save()</cite> for example.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>LDA_explainer</dt><dd><p>The loaded model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>FileNotFoundError</dt><dd><p>If one or more of the files is not found.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.plot_topic_confidence_trends">
+<code class="sig-name descname">plot_topic_confidence_trends</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">save_fname</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.plot_topic_confidence_trends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots topic-confidence trend line for all documents and for each domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>save_fname</strong><span class="classifier">str, optional</span></dt><dd><p>The file name and path for the saved figure (in PNG format).
+If not specified, the figure will not be saved.</p>
+</dd>
+<dt><strong>colors</strong><span class="classifier">OrderedDict of (str, str) or list of str, optional</span></dt><dd><p>A <cite>(color_name : color)</cite> dictionary or just colors list.
+These colors determine the trend line colors of the domains.
+The “All” trend line is always black.
+If there are more domains than colors, colors are reused rotationally.
+(default = matplotlib.colors.TABLEAU_COLORS)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>matplotlib.figure.Figure</dt><dd><p>The figure in which the trend lines are plotted.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The figure is generated as in <a class="reference internal" href="#rd49cc14ec7ed-1" id="id1">[1]</a>: If <span class="math notranslate nohighlight">\(\theta^i_z\)</span> is the probability
+of topic <span class="math notranslate nohighlight">\(z\)</span> in document <span class="math notranslate nohighlight">\(i\)</span>, then for each
+<span class="math notranslate nohighlight">\(j \in J = \{0.1, 0.2, ..., 1\}\)</span> we take the average
+confidence of the explained model over
+<span class="math notranslate nohighlight">\(I^j := \{i|\theta^i \in (j-0.1, j]\}\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[f(\theta; j) = \frac{\sum_{i \in I^j} \hat{p}_i}{|I^j|}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\hat{p}_i\)</span> is the confidence of the model that document <span class="math notranslate nohighlight">\(i\)</span>
+belongs to the positive class.</p>
+<p>If there are more than 10 domains and no color scheme is specified,
+colors will be reused for trend lines.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rd49cc14ec7ed-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Oved, N., Feder, A. and Reichart, R., 2020.
+Predicting In-Game Actions from Interviews of NBA Players.
+Computational Linguistics, pp.1-46.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.plot_topics_dominance">
+<code class="sig-name descname">plot_topics_dominance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">save_fstr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.plot_topics_dominance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the average dominance of each topic in each domain (and in all domains).
+Draws a seperate lolipop chart for each domain and one for all domains.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>save_fstr</strong><span class="classifier">str, optional</span></dt><dd><p>A formatable string for saving the figures. Must contain “%s”.
+E.g., “topic_dominance_%s.png”.
+Domain names will replace “%s”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>list of matplotlib.figure.Figure</dt><dd><p>List of the drawn figures.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Width of the figures is <cite>6 * num_topics / 20</cite> inches, height is 4 inches.</p>
+<p>“.png” suffix is added to <cite>save_fstr</cite> if missing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="lda_explainer.LDA_Explainer.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lda_explainer.LDA_Explainer.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the model to files with the prefix <cite>fname</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>fname</strong><span class="classifier">str</span></dt><dd><p>Optional directory + file names prefix.
+For example, if <cite>fname = “./saved_models/explainer”</cite>, multiple files in “./saved_models/”
+will be written with the prefix “explainer”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><dl class="simple">
+<dt>RuntimeError</dt><dd><p>If <cite>fit()</cite> was not called for the model earlier.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>9 files are saved.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">LDA Explanation 0.0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">LDA Explanation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Ellie Rosenman.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
