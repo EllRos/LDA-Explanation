@@ -1,4 +1,4 @@
-# LDA Explanation
+# Interpreting Black-Box Text Classifiers with LDA-Based Topic Models
 
 An LDA wrapper for explaining a blackbox classifier's predictions, as done in [Oved, N., Feder, A. and Reichart, R. (2020)](https://www.mitpressjournals.org/doi/abs/10.1162/coli_a_00383) and presented in [EMNLP 2020's blackbox workshop](https://blackboxnlp.github.io/).
 
