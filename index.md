@@ -1,37 +1,11 @@
-## Welcome to GitHub Pages
+## Interpreting Blackbox Text Classifiers with LDA-Based Topic Models
 
-You can use the [editor on GitHub](https://github.com/EllRos/LDA-Explanation/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Originaly done in [Oved, N., Feder, A. and Reichart, R. (2020)](https://www.mitpressjournals.org/doi/abs/10.1162/coli_a_00383) and later presented in [EMNLP 2020's blackbox workshop](https://blackboxnlp.github.io/), a method for interpreting blackbox text classifiers using an LDA model is implemented. While still using a "traditional" LDA model, the implementation offers tools for interpreting the model's predictions.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Colaborators
+Ellie Rosenman, [Amir Feder](https://scholar.google.com/citations?user=ERwoPLIAAAAJ&hl=en&oi=ao), [Nadav Oved](https://scholar.google.com/citations?user=9DgSB7sAAAAJ&hl=en), [Roi Reichart](https://ie.technion.ac.il/~roiri/)
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/EllRos/LDA-Explanation/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Links
+[Code](https://github.com/EllRos/LDA-Explanation)
+[Docs](https://ellros.github.io/LDA-Explanation/docs/)
+[Demo](https://ellros.github.io/LDA-Explanation/docs/demo/demo.html)
