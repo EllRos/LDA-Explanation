@@ -1,4 +1,4 @@
-# Interpreting Blackbox Text Classifiers with LDA-Based Topic Models
+## Interpreting Blackbox Text Classifiers with LDA-Based Topic Models
 
 An LDA wrapper for explaining a blackbox classifier's predictions, as done in [Oved, N., Feder, A. and Reichart, R. (2020)](https://www.mitpressjournals.org/doi/abs/10.1162/coli_a_00383) and presented in [EMNLP 2020's blackbox workshop](https://blackboxnlp.github.io/).
 
@@ -7,7 +7,7 @@ Currently supports only binary predictors.
 The module was developed for domain-ruled data (see demo below), although data without domains is supported as well (see API below).
 
 
-## Installation
+### Installation
 #### Git
 Get the latest version using git (recommended):
 `pip install git+https://github.com/EllRos/LDA-Explanation.git`
@@ -20,7 +20,7 @@ In order to avoid git, get the latest wheel build (might not be updated, but sho
 Note: While typically wanting to just run `pip install https://github.com/EllRos/LDA-Explanation/blob/main/dist/LDA_Explanation-0.0.1-py3-none-any.whl`,
 this might cause a strange `BadZipFile` error (even with pip cache disabled).
 
-### Requirements
+#### Requirements
 Installation requiers (and includes) the installation of the following libraries (of any version):
 * NumPy
 * Pandas
@@ -29,7 +29,7 @@ Installation requiers (and includes) the installation of the following libraries
 
 Also requires Python version of 3.6 and above.
 
-## Documentation
+### Documentation
 API documentation: https://ellros.github.io/LDA-Explanation/docs/
 
 Functionality and usage demonstration: https://ellros.github.io/LDA-Explanation/docs/demo/demo.html
