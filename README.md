@@ -32,4 +32,4 @@ Also requires Python version of 3.6 and above.
 ## Documentation
 API documentation: https://ellros.github.io/LDA-Explanation/docs/
 
-Functionality and usage demonstration: https://ellros.github.io/LDA-Explanation/demo/demo.html
+Functionality and usage demonstration: https://ellros.github.io/LDA-Explanation/docs/demo/demo.html
