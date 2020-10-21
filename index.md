@@ -7,5 +7,7 @@ Ellie Rosenman, [Amir Feder](https://scholar.google.com/citations?user=ERwoPLIAA
 
 ### Links
 [Code](https://github.com/EllRos/LDA-Explanation)
+
 [Docs](https://ellros.github.io/LDA-Explanation/docs/)
+
 [Demo](https://ellros.github.io/LDA-Explanation/docs/demo/demo.html)
