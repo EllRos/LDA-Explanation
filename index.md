@@ -2,6 +2,8 @@
 
 Originaly done in [Oved, N., Feder, A. and Reichart, R. (2020)](https://www.mitpressjournals.org/doi/abs/10.1162/coli_a_00383) and later presented in [EMNLP 2020's blackbox workshop](https://blackboxnlp.github.io/), a method for interpreting blackbox text classifiers using an LDA model is implemented. While still using a "traditional" LDA model, the implementation offers tools for interpreting the model's predictions.
 
+The method is based on identifying _seperating topics_ of an LDA model trained over a dataset labeled by the explained model. The separating topics are correlated with the model's classification confidence and might give insights on the prediction process.
+
 ### Colaborators
 Ellie Rosenman, [Amir Feder](https://scholar.google.com/citations?user=ERwoPLIAAAAJ&hl=en&oi=ao), [Nadav Oved](https://scholar.google.com/citations?user=9DgSB7sAAAAJ&hl=en), [Roi Reichart](https://ie.technion.ac.il/~roiri/)
 
